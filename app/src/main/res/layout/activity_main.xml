@@ -208,6 +208,7 @@
 
                 <!-- Current Balance Card -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/balanceCard"
                     android:layout_width="0dp"
                     android:layout_height="100dp"
                     android:layout_weight="1"

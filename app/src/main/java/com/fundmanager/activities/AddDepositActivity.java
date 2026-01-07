@@ -221,16 +221,15 @@ public class AddDepositActivity extends AppCompatActivity {
                                     getString(R.string.deposit_added), 
                                     Toast.LENGTH_SHORT).show();
 
+                            // Send notification (before clearing form)
+                            String message = String.format(getString(R.string.deposit_notification),
+                                    member.getName(), String.format("৳ %.2f", depositAmount), month);
+                            sendNotification(getString(R.string.new_deposit), message);
+
                             // Clear form
                             memberSpinner.setSelection(0);
                             monthSpinner.setSelection(0);
                             amountEditText.setText("");
-
-                            // Send notification
-                            String message = String.format(getString(R.string.deposit_notification),
-                                    member.getName(), String.format("৳ %.2f", depositAmount),
-                                    months.get(monthSpinner.getSelectedItemPosition()));
-                            sendNotification(getString(R.string.new_deposit), message);
                         }
                     }
 

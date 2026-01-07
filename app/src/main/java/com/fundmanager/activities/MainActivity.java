@@ -1,6 +1,9 @@
 package com.fundmanager.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.fundmanager.R;
 import com.fundmanager.models.User;
 import com.google.android.material.card.MaterialCardView;
@@ -24,10 +29,13 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1001;
+
     private TextView welcomeTextView, roleTextView;
     private TextView totalMembersTextView, totalDepositsTextView;
     private TextView totalExpensesTextView, currentBalanceTextView;
     private MaterialCardView membersCard, depositsCard, expensesCard, reportsCard;
+    private MaterialCardView balanceCard;
     private FloatingActionButton fabPaymentHistory;
 
     private FirebaseAuth mAuth;
@@ -74,7 +82,11 @@ public class MainActivity extends AppCompatActivity {
         depositsCard = findViewById(R.id.depositsCard);
         expensesCard = findViewById(R.id.expensesCard);
         reportsCard = findViewById(R.id.reportsCard);
+        balanceCard = findViewById(R.id.balanceCard);
         fabPaymentHistory = findViewById(R.id.fabPaymentHistory);
+
+        // Request notification permission for Android 13+
+        requestNotificationPermission();
 
         // Load user data
         loadUserData();
@@ -202,11 +214,12 @@ public class MainActivity extends AppCompatActivity {
         currentBalanceTextView.setText(String.format("৳ %.2f", balance));
         
         // Change color based on balance
-        MaterialCardView balanceCard = (MaterialCardView) currentBalanceTextView.getParent().getParent();
-        if (balance >= 0) {
-            balanceCard.setCardBackgroundColor(getResources().getColor(R.color.success));
-        } else {
-            balanceCard.setCardBackgroundColor(getResources().getColor(R.color.error));
+        if (balanceCard != null) {
+            if (balance >= 0) {
+                balanceCard.setCardBackgroundColor(getResources().getColor(R.color.success));
+            } else {
+                balanceCard.setCardBackgroundColor(getResources().getColor(R.color.error));
+            }
         }
     }
 
@@ -214,6 +227,30 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
+    }
+
+    private void requestNotificationPermission() {
+        // Request notification permission for Android 13+ (API 33+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        NOTIFICATION_PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                          @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override

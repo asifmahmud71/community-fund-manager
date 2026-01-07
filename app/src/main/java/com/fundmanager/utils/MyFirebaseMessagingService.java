@@ -54,11 +54,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         
+        // Use appropriate flags based on Android version
+        int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M 
+                ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                : PendingIntent.FLAG_UPDATE_CURRENT;
+        
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 
                 0, 
                 intent,
-                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE
+                flags
         );
 
         NotificationCompat.Builder notificationBuilder =
