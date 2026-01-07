@@ -188,7 +188,7 @@ public class AddDepositActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         // Update member's total deposit
-                        updateMemberTotalDeposit(memberId, amount);
+                        updateMemberTotalDeposit(memberId, memberName, amount, month);
                     } else {
                         progressBar.setVisibility(View.GONE);
                         addDepositButton.setEnabled(true);
@@ -199,7 +199,8 @@ public class AddDepositActivity extends AppCompatActivity {
                 });
     }
 
-    private void updateMemberTotalDeposit(String memberId, double depositAmount) {
+    private void updateMemberTotalDeposit(String memberId, String memberName, 
+                                         double depositAmount, String month) {
         databaseReference.child("members").child(memberId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -209,27 +210,37 @@ public class AddDepositActivity extends AppCompatActivity {
                             double newTotal = member.getTotalDeposit() + depositAmount;
                             double newDue = member.getBaseAmount() - newTotal;
                             
-                            databaseReference.child("members").child(memberId)
-                                    .child("totalDeposit").setValue(newTotal);
-                            databaseReference.child("members").child(memberId)
-                                    .child("amountDue").setValue(newDue);
-
-                            progressBar.setVisibility(View.GONE);
-                            addDepositButton.setEnabled(true);
+                            // Use batched update for atomic operation
+                            Map<String, Object> updates = new HashMap<>();
+                            updates.put("totalDeposit", newTotal);
+                            updates.put("amountDue", newDue);
                             
-                            Toast.makeText(AddDepositActivity.this, 
-                                    getString(R.string.deposit_added), 
-                                    Toast.LENGTH_SHORT).show();
+                            databaseReference.child("members").child(memberId)
+                                    .updateChildren(updates)
+                                    .addOnCompleteListener(updateTask -> {
+                                        progressBar.setVisibility(View.GONE);
+                                        addDepositButton.setEnabled(true);
+                                        
+                                        if (updateTask.isSuccessful()) {
+                                            Toast.makeText(AddDepositActivity.this, 
+                                                    getString(R.string.deposit_added), 
+                                                    Toast.LENGTH_SHORT).show();
 
-                            // Send notification (before clearing form)
-                            String message = String.format(getString(R.string.deposit_notification),
-                                    member.getName(), String.format("৳ %.2f", depositAmount), month);
-                            sendNotification(getString(R.string.new_deposit), message);
+                                            // Send notification
+                                            String message = String.format(getString(R.string.deposit_notification),
+                                                    memberName, String.format("৳ %.2f", depositAmount), month);
+                                            sendNotification(getString(R.string.new_deposit), message);
 
-                            // Clear form
-                            memberSpinner.setSelection(0);
-                            monthSpinner.setSelection(0);
-                            amountEditText.setText("");
+                                            // Clear form
+                                            memberSpinner.setSelection(0);
+                                            monthSpinner.setSelection(0);
+                                            amountEditText.setText("");
+                                        } else {
+                                            Toast.makeText(AddDepositActivity.this, 
+                                                    getString(R.string.error_occurred), 
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     }
 
