@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="primary">#1976D2</color>
+    <color name="primary_dark">#1565C0</color>
+    <color name="primary_light">#BBDEFB</color>
+    <color name="accent">#FF5722</color>
+    
+    <!-- Status Colors -->
+    <color name="success">#4CAF50</color>
+    <color name="error">#F44336</color>
+    <color name="warning">#FFC107</color>
+    <color name="info">#2196F3</color>
+    
+    <!-- Dashboard Card Colors -->
+    <color name="card_members">#6A1B9A</color>
+    <color name="card_deposits">#00897B</color>
+    <color name="card_expenses">#E64A19</color>
+    <color name="card_reports">#1565C0</color>
+    
+    <!-- Background Colors -->
+    <color name="background">#F5F5F5</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="divider">#E0E0E0</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="text_white">#FFFFFF</color>
+    
+    <!-- Other Colors -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+    
+    <!-- Chart Colors -->
+    <color name="chart_1">#FF6384</color>
+    <color name="chart_2">#36A2EB</color>
+    <color name="chart_3">#FFCE56</color>
+    <color name="chart_4">#4BC0C0</color>
+    <color name="chart_5">#9966FF</color>
+    <color name="chart_6">#FF9F40</color>
+    <color name="chart_7">#FF6384</color>
+</resources>
