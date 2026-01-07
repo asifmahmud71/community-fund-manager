@@ -1,0 +1,2 @@
+rootProject.name = "Community Fund Manager"
+include ':app'
