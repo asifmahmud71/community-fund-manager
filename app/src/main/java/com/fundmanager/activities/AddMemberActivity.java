@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fundmanager.R;
 import com.fundmanager.adapters.MemberAdapter;
 import com.fundmanager.models.Member;
+import com.fundmanager.utils.Constants;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddMemberActivity extends AppCompatActivity {
-
-    private static final int MAX_MEMBERS = 20;
 
     private TextInputEditText nameEditText, baseAmountEditText, phoneEditText, addressEditText;
     private MaterialButton addMemberButton;
@@ -150,7 +149,7 @@ public class AddMemberActivity extends AppCompatActivity {
         }
 
         // Check member limit
-        if (currentMemberCount >= MAX_MEMBERS) {
+        if (currentMemberCount >= Constants.MAX_MEMBERS) {
             Toast.makeText(this, getString(R.string.member_limit_reached), 
                     Toast.LENGTH_LONG).show();
             return;

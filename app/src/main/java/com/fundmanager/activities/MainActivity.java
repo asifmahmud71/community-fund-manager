@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.fundmanager.R;
 import com.fundmanager.models.User;
+import com.fundmanager.utils.Constants;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,8 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1001;
 
     private TextView welcomeTextView, roleTextView;
     private TextView totalMembersTextView, totalDepositsTextView;
@@ -236,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                        NOTIFICATION_PERMISSION_REQUEST_CODE);
+                        Constants.NOTIFICATION_PERMISSION_REQUEST_CODE);
             }
         }
     }
@@ -245,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+        if (requestCode == Constants.NOTIFICATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted
                 Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show();

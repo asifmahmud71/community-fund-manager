@@ -46,8 +46,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendTokenToServer(String token) {
-        // TODO: Implement sending token to your server
-        // This is useful if you want to send targeted notifications to specific users
+        // Optional: Implement this method if you need to send FCM tokens to your own server
+        // This allows sending targeted push notifications to specific users
+        // For basic functionality with broadcast notifications, this can remain empty
+        // Example implementation:
+        // - Store token in Firebase Realtime Database under users/{userId}/fcmToken
+        // - Or send token to your REST API for server-side notification targeting
     }
 
     private void sendNotification(String title, String messageBody) {
